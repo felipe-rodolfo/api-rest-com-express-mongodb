@@ -1,12 +1,28 @@
 import { autores, livros } from "../models/index.js";
-
+import RequisicaoIncorreta from "../erros/RequisicaoIncorreta.js";
 class LivroController {
-  static listarLivros = (req, res) => {
-    livros.find()
-      .populate("autor")
-      .exec((err, livros) => {
-        res.status(200).json(livros);
-      });
+
+  static listarLivros = async (req, res, next) => {
+
+    try {
+      let {limite = 5, pagina = 1} = req.query;
+      limite = parseInt(limite);
+      pagina = parseInt(pagina);
+      
+      if(limite > 0 && pagina > 0){
+        const livrosResultado = await livros.find()
+          .skip((pagina - 1) * limite)
+          .limit(limite)
+          .populate("autor")
+          .exec();
+        res.status(200).json(livrosResultado);
+      } else {
+        next(new RequisicaoIncorreta());
+      }
+    } catch (error) {
+      next(error);
+    }
+    
   };
 
   static listarLivroPorID = (req, res) => {
