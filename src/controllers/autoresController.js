@@ -5,6 +5,7 @@ class AutorController {
     const autoresResultados = await autor.find();
 
     try {
+      throw new Error();
       res.status(200).json(autoresResultados);
     } catch(error){
       next(error);
