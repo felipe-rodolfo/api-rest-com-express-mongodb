@@ -1,4 +1,4 @@
-import livros from "../models/Livro.js";
+import { livros } from "../models/index.js";
 
 class LivroController {
   static listarLivros = (req, res) => {
@@ -59,10 +59,14 @@ class LivroController {
     });
   };
 
-  static listarLivroPorEditora = (req, res) =>{
-    const editora = req.query.editora;
+  static listarLivroPorFiltro = (req, res) =>{
+    const {editora, titulo} = req.query;
 
-    livros.find({"editora": editora}, {}, (err, livros) => {
+    const busca = {};
+    if(editora) busca.editora = editora;
+    if(titulo) busca.titulo = titulo;
+
+    livros.find(busca, {}, (err, livros) => {
       res.status(200).send(livros);
     });
   };

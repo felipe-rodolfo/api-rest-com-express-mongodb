@@ -1,9 +1,9 @@
 import NaoEncontrado from "../erros/NaoEncontrado.js";
-import autor from "../models/Autor.js";
+import { autores } from "../models/index.js";
 
 class AutorController {
   static listarAutor = async (req, res, next) => {
-    const autoresResultados = await autor.find();
+    const autoresResultados = await autores.find();
 
     try {
       res.status(200).json(autoresResultados);
@@ -17,7 +17,7 @@ class AutorController {
 
     try {
       const id = req.params.id;
-      const autorPorIDResultado = await autor.findById(id);
+      const autorPorIDResultado = await autores.findById(id);
       if(autorPorIDResultado){
         res.status(200).send(autorPorIDResultado);
       } else {
@@ -31,7 +31,7 @@ class AutorController {
   };
 
   static cadastrarAutor = async (req, res, next) => {
-    let novoAutor = new autor(req.body);
+    let novoAutor = new autores(req.body);
     const novaAutorResultado = await novoAutor.save();
 
     try {
@@ -47,7 +47,7 @@ class AutorController {
     try {
       const id = req.params.id;
         
-      const autorResultado = await autor.findByIdAndUpdate(id, {$set: req.body});
+      const autorResultado = await autores.findByIdAndUpdate(id, {$set: req.body});
       if(autorResultado != null){
         res.status(200).send({message: "Autor atualizado com sucesso!"});
       } else {
@@ -64,7 +64,7 @@ class AutorController {
 
     try {
       const id = req.params.id;
-      const autorResultado = await autor.findByIdAndDelete(id);
+      const autorResultado = await autores.findByIdAndDelete(id);
       if(autorResultado !== null){
         res.status(200).send({message: "autor removido com sucesso"});
       } else {
